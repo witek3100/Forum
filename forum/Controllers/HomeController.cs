@@ -15,7 +15,11 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        return View();
+        if (HttpContext.Session.GetString("email") == null)
+        {
+            return View();
+        }
+        return View("IndexLoggedIn");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
