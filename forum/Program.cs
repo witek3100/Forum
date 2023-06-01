@@ -1,4 +1,4 @@
-using forum.Data;
+using Forum.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,8 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<AddDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Forum")));
+builder.Services.AddDbContext<ForumDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("ForumDbContext") ?? throw new InvalidOperationException("Connection string 'ForumDbContext' not found.")));
 
 var app = builder.Build();
 
