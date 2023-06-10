@@ -1,8 +1,46 @@
-<form asp-action="SignUp">
-    <input type="text" name="email" placeholder="email">
-    <input type="password" name="password" placeholder="Password">
-    <input type="password" name="confirmPassword" placeholder="Confirm Password">
-    <input type="text" name="firstName" placeholder="First Name">
-    <input type="text" name="lastName" placeholder="Last Name">
-    <input type="submit" value="Submit">
+<form asp-action="SignUp" onsubmit="return validateForm()">
+    <div style="margin-top: 40px;">
+        <center>
+            <h1>SIGN UP</h1>
+            <ul style="list-style-type: none;">
+                <li style="margin-top: 15px;"><input id="firstNameInput" style="background-color: #d6fb87; border-radius: 10px;" type="text" name="firstName" placeholder="First Name"></li>
+                <li style="margin-top: 15px;"><input id="lastNameInput" style="background-color: #d6fb87; border-radius: 10px;" type="text" name="lastName" placeholder="Last Name"></li>
+                <li style="margin-top: 15px;"><input id="emailInput" style="background-color: #d6fb87; border-radius: 10px;" type="text" name="email" placeholder="email"></li>
+                <li style="margin-top: 15px;"><input id="passwordInput" style="background-color: #d6fb87; border-radius: 10px;" type="password" name="password" placeholder="Password"></li>
+                <li style="margin-top: 15px;"><input id="confirmPasswordInput" style="background-color: #d6fb87; border-radius: 10px;" type="password" name="confirmPassword" placeholder="Confirm Password"></li>
+                <li style="margin-top: 15px;"><input id="submit-btn" style="background-color: #d6fb87; border-radius: 10px;" type="submit" value="Submit"></li>
+            </ul>
+        </center>
+    </div>
 </form>
+
+<script>
+function validateForm(){
+    var firstName = document.getElementById("firstNameInput").value;
+    var lastName = document.getElementById("lastNameInput").value;
+    var email = document.getElementById("emailInput").value;
+    var password = document.getElementById("passwordInput").value;
+    var confirmPassword = document.getElementById("confirmPasswordInput").value;
+    
+    if (firstName.length == 0) {
+        alert('First name cannot be empty');
+        return false;
+    }
+    if (lastName.length == 0) {
+        alert('Last name cannot be empty');    
+        return false;
+    }
+    if (email.length < 1) {
+        alert('Incorrect email addresss');   
+        return false;
+    }
+    if (password.length < 8){
+        alert('Password must be at least 8 characters length');    
+        return false;
+    }
+    if (password !== confirmPassword){
+        alert("Passwords doesn't match");    
+        return false;
+    }
+}
+</script>
