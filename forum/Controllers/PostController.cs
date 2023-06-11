@@ -60,6 +60,7 @@ namespace forum.Controllers
         {
             if (ModelState.IsValid)
             {
+                post.userId = 5;
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

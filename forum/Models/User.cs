@@ -7,11 +7,20 @@ public class User
     [Key]
     public int id { get; set; }
 
-    [Display(Name = "Name")]
+    [Required]
+    [StringLength(30)]
+    [Display(Name = "First name: ")]
     public string name { get; set; } = default!;
 
+    [Required]
+    [StringLength(30)]
+    [Display(Name = "Last name: ")]
     public string lastName { get; set; } = default!;
 
+    [Required]
+    [EmailAddress]
+    [StringLength(40)]
+    [Display(Name = "Email Address: ")]
     public string email { get; set; }
 
     public string passwordHash { get; set; }

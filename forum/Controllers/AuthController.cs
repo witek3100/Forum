@@ -18,8 +18,7 @@ namespace forum.Controllers
         {
             return View();
         }
-
-        [HttpPost]
+        
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
@@ -93,8 +92,13 @@ namespace forum.Controllers
 
             _context.Add(newUser);
             _context.SaveChanges();
-
-            return RedirectToAction("SignIn");
+            
+            return RedirectToAction("AccountCreated");
+        }
+        
+        public IActionResult AccountCreated()
+        {
+            return View();
         }
     }
 }
