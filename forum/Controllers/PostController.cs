@@ -60,7 +60,7 @@ namespace forum.Controllers
         {
             if (ModelState.IsValid)
             {
-                post.userId = 5;
+                post.userId = _context.User.Where(u => u.email == HttpContext.Session.GetString("email")).ToList()[0].id;
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

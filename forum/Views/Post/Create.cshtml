@@ -3,9 +3,9 @@
 @{
     ViewData["Title"] = "Create";
 }
-<center>
+
     <h1>Create new post</h1>
-    <div class="row" style="margin-left: 40%">
+    <div class="row">
         <div class="col-md-4">
             <form asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -16,17 +16,19 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="content" class="control-label"></label>
-                    <textarea asp-for="content" class="form-control" style="background-color: #acf9ab; height: 200px;"></textarea>
+                    <textarea asp-for="content" class="form-control" style="background-color: #acf9ab; height: 200px; width: 400px;"></textarea>
                     <span asp-validation-for="content" class="text-danger"></span>
                 </div>
-                <div class="form-group" style="margin-top: 15px;">
+                <div class="form-group" style="margin-top: 15px; display: inline-block;">
                     <input type="submit" value="Create" class="button" style="border-radius:10px; background-color: #217d18" />
                 </div>
-                <a asp-action="Index" style="margin-top: 20px; background-color: #de881c; border-radius: 10px; color: black; text-decoration: none;" >&nbsp Back to List &nbsp</a>
+                <div style="display: inline-block;">
+                    <a asp-action="Index" asp-controller="Home" style="margin-top: 20px; background-color: #de881c; border-radius: 10px; color: black; text-decoration: none;" >&nbsp Back to home &nbsp</a>
+                </div>
                 </form>
         </div>
     </div>
-</center>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

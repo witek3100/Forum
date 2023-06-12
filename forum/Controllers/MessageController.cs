@@ -22,9 +22,11 @@ namespace forum.Controllers
         // GET: Message
         public async Task<IActionResult> Index()
         {
-              return _context.Message != null ? 
-                          View(await _context.Message.ToListAsync()) :
-                          Problem("Entity set 'ForumDbContext.Message'  is null.");
+            var sentMessages = _context.Message.Where(m => m.senderEmail == HttpContext.Session.GetString("email")).ToList();
+            var recievedMessages = _context.Message.Where(m => m.receiverEmail == HttpContext.Session.GetString("email")).ToList();
+            ViewBag.sentMessages = sentMessages;
+            ViewBag.recievedMessages = recievedMessages;
+            return _context.Message != null ? View() : Problem("Entity set 'ForumDbContext.Message'  is null.");
         }
 
         // GET: Message/Details/5
@@ -56,9 +58,10 @@ namespace forum.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,senderId,receiverId,content")] Message message)
+        public async Task<IActionResult> Create([Bind("id,senderEmail,receiverEmail,content")] Message message)
         {
-            if (ModelState.IsValid)
+            message.senderEmail = HttpContext.Session.GetString("email");
+            if (message.senderEmail != "" && message.receiverEmail != "")
             {
                 _context.Add(message);
                 await _context.SaveChangesAsync();

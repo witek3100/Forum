@@ -51,11 +51,13 @@ namespace forum.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("receiverId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("receiverEmail")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("senderId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("senderEmail")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("id");
 
@@ -110,14 +112,17 @@ namespace forum.Migrations
 
                     b.Property<string>("email")
                         .IsRequired()
+                        .HasMaxLength(40)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("lastName")
                         .IsRequired()
+                        .HasMaxLength(30)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("name")
                         .IsRequired()
+                        .HasMaxLength(30)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("passwordHash")

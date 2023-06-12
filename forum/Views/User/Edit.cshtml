@@ -3,10 +3,8 @@
 @{
     ViewData["Title"] = "Edit";
 }
+<h1>Edit profile</h1>
 
-<h1>Edit</h1>
-
-<h4>User</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -15,44 +13,49 @@
             <input type="hidden" asp-for="id" />
             <div class="form-group">
                 <label asp-for="name" class="control-label"></label>
-                <input asp-for="name" class="form-control" />
+                <input style="background-color: #d6fb87" asp-for="name" class="form-control" />
                 <span asp-validation-for="name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="lastName" class="control-label"></label>
-                <input asp-for="lastName" class="form-control" />
+                <input style="background-color: #d6fb87" asp-for="lastName" class="form-control" />
                 <span asp-validation-for="lastName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="email" class="control-label"></label>
-                <input asp-for="email" class="form-control" />
+                <input style="background-color: #d6fb87" asp-for="email" class="form-control" />
                 <span asp-validation-for="email" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="passwordHash" class="control-label"></label>
-                <input asp-for="passwordHash" class="form-control" />
-                <span asp-validation-for="passwordHash" class="text-danger"></span>
-            </div>
+             <div class="form-group">
+                 <label asp-for="passwordHash" class="control-label"></label>
+                 <input asp-for="passwordHash" class="form-control" readonly="readonly"/>
+                 <span asp-validation-for="passwordHash" class="text-danger"></span>
+             </div>
             <div class="form-group">
                 <label asp-for="token" class="control-label"></label>
-                <input asp-for="token" class="form-control" />
+                <input asp-for="token" class="form-control" readonly="readonly"/>
                 <span asp-validation-for="token" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="role" class="control-label"></label>
-                <input asp-for="role" class="form-control" />
+                <input asp-for="role" class="form-control" readonly="readonly"/>
                 <span asp-validation-for="role" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+            <center>
+                <div class="form-group">
+                    <input type="submit" value="Save" style="margin-top: 10px; background-color: #217d18; border-radius: 10px;" />
+                </div>
+            </center>
         </form>
+        <center>
+            <div>
+                <a style="background-color: #de881c; border-radius: 10px; text-decoration: none; color: black;" href="../Profile">&nbsp Back to List &nbsp</a>
+            </div>
+        </center>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

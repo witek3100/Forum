@@ -6,10 +6,12 @@ public class Message
 {
     [Key]
     public int id { get; set; }
-
-    public int senderId { get; set; }
-
-    public int receiverId { get; set; }
-
+    
+    [EmailAddress]
+    public string senderEmail { get; set; }
+    
+    [EmailAddress]
+    public string receiverEmail { get; set; }
+    
     public string content { get; set; } = default!;
 }

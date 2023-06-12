@@ -27,6 +27,13 @@ namespace forum.Controllers
                           Problem("Entity set 'ForumDbContext.User'  is null.");
         }
 
+        public async Task<IActionResult> Profile()
+        {
+            var user = _context.User.Where(u => u.email == HttpContext.Session.GetString("email")).ToList()[0];
+            ViewBag.user = user;
+            return View();
+        }
+        
         // GET: User/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -113,7 +120,7 @@ namespace forum.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Profile));
             }
             return View(user);
         }

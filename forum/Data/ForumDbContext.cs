@@ -19,4 +19,5 @@ public class ForumDbContext : DbContext
     public DbSet<Comment> Comment { get; set; } = default!;
 
     public DbSet<Tag> Tag { get; set; } = default!;
+
 }
