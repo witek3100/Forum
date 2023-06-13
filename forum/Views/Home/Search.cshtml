@@ -1,6 +1,11 @@
 @if (ViewBag.postsCount > 0)
         {
-            <center><h2 style="margin-top: 10px;">Results for @ViewBag.query</h2></center>
+            <center>
+                <h2 style="margin-top: 10px;">Results for @ViewBag.query</h2>
+                <div style="display: inline-block;">
+                    <a asp-action="Index" asp-controller="Home" style="margin-top: 20px; background-color: #de881c; border-radius: 10px; color: black; text-decoration: none;">&nbsp Back to home &nbsp</a>
+                </div>
+            </center>
             <ul style="list-style-type: none">
                 @foreach (var post in ViewBag.posts)
                 {

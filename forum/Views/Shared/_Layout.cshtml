@@ -34,8 +34,8 @@
 
 <script>
 function search(){
-    var search_val = $('#site-search').val();
-    location.href = "../Home/Search?query=" + search_val;
+    var search_query = $('#site-search').val();
+    location.href = '@Url.Action("Search", "Home", new { query = "search_query" })'.replace("search_query", search_query);
 }
 </script>
 
