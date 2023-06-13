@@ -30,8 +30,10 @@
                 </div>
                 @Html.DisplayFor(modelItem => item.content)
                 <div style="float: right">
-                    <button style="border-radius: 10px; background-color: #5a9c1f">Like</button> &nbsp 
+                    <span>@Html.DisplayFor(modelItem => item.likes)</span>
+                    <button style="border-radius: 10px; background-color: #5a9c1f">Like</button> &nbsp
                     <button style="border-radius: 10px; background-color: #9c2319">Dislike</button>
+                    <span>@Html.DisplayFor(modelItem => item.dislikes)</span>
                 </div>
             </div>
     </div>

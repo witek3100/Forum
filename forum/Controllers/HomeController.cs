@@ -35,6 +35,15 @@ public class HomeController : Controller
         return View("IndexLoggedIn");
     }
 
+    public IActionResult Search(string query)
+    {
+        var posts = _context.Post.Where(p => p.title.Contains(query)).ToList();
+        ViewBag.posts = posts;
+        ViewBag.postsCount = posts.Count;
+        ViewBag.query = query;
+        return View();
+    }
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

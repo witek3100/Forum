@@ -13,24 +13,14 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="userId" class="control-label"></label>
-                <input asp-for="userId" class="form-control" />
-                <span asp-validation-for="userId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="postId" class="control-label"></label>
-                <input asp-for="postId" class="form-control" />
+                <input asp-for="postId" class="form-control" value="@ViewBag.postId" readonly="readonly"/>
                 <span asp-validation-for="postId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="content" class="control-label"></label>
                 <input asp-for="content" class="form-control" />
                 <span asp-validation-for="content" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="createdAt" class="control-label"></label>
-                <input asp-for="createdAt" class="form-control" />
-                <span asp-validation-for="createdAt" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

@@ -51,6 +51,9 @@ namespace forum.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("createdAt")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("receiverEmail")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -76,6 +79,15 @@ namespace forum.Migrations
 
                     b.Property<DateTime>("createdAt")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("dislikes")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("likes")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("tagId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("title")
                         .IsRequired()

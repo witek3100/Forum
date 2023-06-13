@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Forum.Models;
 
@@ -7,8 +8,10 @@ public class Comment
     [Key]
     public int id { get; set; }
 
+    [ForeignKey("User")]
     public int userId { get; set; }
 
+    [ForeignKey("Post")]
     public int postId { get; set; }
 
     public string content { get; set; } = default!;

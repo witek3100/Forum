@@ -22,8 +22,8 @@ namespace forum.Controllers
         // GET: Message
         public async Task<IActionResult> Index()
         {
-            var sentMessages = _context.Message.Where(m => m.senderEmail == HttpContext.Session.GetString("email")).ToList();
-            var recievedMessages = _context.Message.Where(m => m.receiverEmail == HttpContext.Session.GetString("email")).ToList();
+            var sentMessages = _context.Message.Where(m => m.senderEmail == HttpContext.Session.GetString("email")).ToList().OrderByDescending(m => m.createdAt);
+            var recievedMessages = _context.Message.Where(m => m.receiverEmail == HttpContext.Session.GetString("email")).ToList().OrderByDescending(m => m.createdAt);
             ViewBag.sentMessages = sentMessages;
             ViewBag.recievedMessages = recievedMessages;
             return _context.Message != null ? View() : Problem("Entity set 'ForumDbContext.Message'  is null.");

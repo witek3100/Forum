@@ -160,5 +160,23 @@ namespace forum.Controllers
         {
           return (_context.Post?.Any(e => e.id == id)).GetValueOrDefault();
         }
+
+        public async Task<IActionResult> GiveLike(int id)
+        {
+            var post = _context.Post.Where(p => p.id == id).ToList()[0];
+            post.likes += 1;
+            _context.Update(post);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index", "Home", new { area = "" });
+        }
+        
+        public async Task<IActionResult> GiveDislike(int id)
+        {
+            var post = _context.Post.Where(p => p.id == id).ToList()[0];
+            post.dislikes += 1;
+            _context.Update(post);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index", "Home", new { area = "" });
+        }
     }
 }

@@ -22,9 +22,7 @@ namespace forum.Controllers
         // GET: Comment
         public async Task<IActionResult> Index()
         {
-              return _context.Comment != null ? 
-                          View(await _context.Comment.ToListAsync()) :
-                          Problem("Entity set 'ForumDbContext.Comment'  is null.");
+            return _context.Comment != null ? View() : Problem("Entity set 'ForumDbContext.Comment'  is null.");
         }
 
         // GET: Comment/Details/5
@@ -46,8 +44,9 @@ namespace forum.Controllers
         }
 
         // GET: Comment/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
+            ViewBag.postId = id;
             return View();
         }
 
@@ -58,11 +57,12 @@ namespace forum.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,userId,postId,content,createdAt")] Comment comment)
         {
+            comment.userId = _context.User.Where(u => u.email == HttpContext.Session.GetString("email")).ToList()[0].id;
             if (ModelState.IsValid)
             {
                 _context.Add(comment);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
             }
             return View(comment);
         }
@@ -158,6 +158,15 @@ namespace forum.Controllers
         private bool CommentExists(int id)
         {
           return (_context.Comment?.Any(e => e.id == id)).GetValueOrDefault();
+        }
+
+        public async Task<IActionResult> PostComments(int id)
+        {
+            var comments = _context.Comment.Where(c => c.postId == id).ToList();
+            var post = _context.Post.Where(p => p.id == id).ToList()[0];
+            ViewBag.comments = comments;
+            ViewBag.post = post;
+            return View();
         }
     }
 }

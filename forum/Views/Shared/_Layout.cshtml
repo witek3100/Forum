@@ -19,9 +19,9 @@
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between"></div>
             
-            <input placeholder="#tag" style="border-radius: 25px; background-color: #aaea8f" type="search" id="site-search" name="q">
+            <input placeholder="#tag or title" style="border-radius: 25px; background-color: #aaea8f" type="search" id="site-search" name="q">
             &nbsp&nbsp
-            <button style="border-radius: 25px; background-color: #aaea8f">&nbsp Search &nbsp;</button>
+            <button style="border-radius: 25px; background-color: #aaea8f" onclick="search()">&nbsp Search &nbsp</button>
         </div>
     </nav>
 </header>
@@ -32,11 +32,13 @@
     </main>
 </div>
 
-@* <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - forum - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer> *@
+<script>
+function search(){
+    var search_val = $('#site-search').val();
+    location.href = "../Home/Search?query=" + search_val;
+}
+</script>
+
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
