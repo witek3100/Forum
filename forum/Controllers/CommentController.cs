@@ -55,14 +55,15 @@ namespace forum.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,userId,postId,content,createdAt")] Comment comment)
+        public async Task<IActionResult> Create([Bind("postId,content")] Comment comment)
         {
-            comment.userId = _context.User.Where(u => u.email == HttpContext.Session.GetString("email")).ToList()[0].id;
+            var postId = comment.postId;
+           // comment.userId = _context.User.Where(u => u.email == HttpContext.Session.GetString("email")).ToList()[0].id;
             if (ModelState.IsValid)
             {
                 _context.Add(comment);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("PostComments", "Comment", new { id = postId });
             }
             return View(comment);
         }
@@ -162,7 +163,7 @@ namespace forum.Controllers
 
         public async Task<IActionResult> PostComments(int id)
         {
-            var comments = _context.Comment.Where(c => c.postId == id).ToList();
+            var comments = _context.Comment.Where(c => c.postId == id).ToList().OrderByDescending(p => p.createdAt);
             var post = _context.Post.Where(p => p.id == id).ToList()[0];
             ViewBag.comments = comments;
             ViewBag.post = post;

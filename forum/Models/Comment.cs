@@ -6,6 +6,7 @@ namespace Forum.Models;
 public class Comment
 {
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int id { get; set; }
 
     [ForeignKey("User")]
