@@ -7,7 +7,13 @@ public class ForumDbContext : DbContext
 {
     public ForumDbContext(DbContextOptions<ForumDbContext> options) : base(options)
     {
+        if (this.User.Count() == 0)
+        {
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword("admin");
 
+            this.Add(new User { id = 1, name = "admin", lastName = "admin", email = "admin@admin.pl", passwordHash = passwordHash, token = Guid.NewGuid().ToString(), role = "admin" });
+            this.SaveChanges();
+        }
     }
 
     public DbSet<User> User { get; set; } = default!;
