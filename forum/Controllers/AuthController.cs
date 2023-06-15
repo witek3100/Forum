@@ -100,5 +100,89 @@ namespace forum.Controllers
         {
             return View();
         }
+
+        // public IActionResult AccessDenied()
+        // {
+        //     return View();
+        // }
+
+        // public IActionResult ForgotPassword()
+        // {
+        //     return View();
+        // }
+
+        // [HttpPost]
+        // public IActionResult ForgotPassword(IFormCollection form)
+        // {
+        //     var email = form["email"].ToString();
+        //     var user = _context.User.FirstOrDefault(u => u.email == email);
+
+        //     if (user == null)
+        //     {
+        //         return Problem("User does not exist.");
+        //     }
+
+        //     var newPassword = Guid.NewGuid().ToString().Substring(0, 8);
+        //     var passwordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        //     user.passwordHash = passwordHash;
+        //     _context.SaveChanges();
+
+        //     return RedirectToAction("PasswordReset", new { newPassword = newPassword });
+        // }
+
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ChangePassword(IFormCollection form)
+        {
+            var email = HttpContext.Session.GetString("email");
+
+            if (email == null)
+            {
+                return Problem("Invalid credentials.");
+            }
+
+            var user = _context.User.FirstOrDefault(u => u.email == email);
+            var oldPassword = form["oldPassword"].ToString();
+            var newPassword = form["newPassword"].ToString();
+            var confirmPassword = form["confirmPassword"].ToString();
+
+            if (user == null)
+            {
+                return Problem("User does not exist.");
+            }
+
+            var authResult = BCrypt.Net.BCrypt.Verify(oldPassword, user.passwordHash);
+
+            if (!authResult)
+            {
+                return Problem("Invalid credentials.");
+            }
+
+            if (newPassword.Length < 8)
+            {
+                return Problem("Password must be at least 8 characters long.");
+            }
+            else if (newPassword != confirmPassword)
+            {
+                return Problem("Passwords do not match.");
+            }
+
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            user.passwordHash = passwordHash;
+            _context.SaveChanges();
+
+            HttpContext.Session.Clear();
+
+            return RedirectToAction("PasswordChanged");
+        }
+
+        public IActionResult PasswordChanged()
+        {
+            return View();
+        }
     }
 }

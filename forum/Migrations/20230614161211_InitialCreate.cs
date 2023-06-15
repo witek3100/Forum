@@ -33,9 +33,10 @@ namespace forum.Migrations
                 {
                     id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    senderId = table.Column<int>(type: "INTEGER", nullable: false),
-                    receiverId = table.Column<int>(type: "INTEGER", nullable: false),
-                    content = table.Column<string>(type: "TEXT", nullable: false)
+                    senderEmail = table.Column<string>(type: "TEXT", nullable: false),
+                    receiverEmail = table.Column<string>(type: "TEXT", nullable: false),
+                    content = table.Column<string>(type: "TEXT", nullable: false),
+                    createdAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,7 +52,10 @@ namespace forum.Migrations
                     userId = table.Column<int>(type: "INTEGER", nullable: false),
                     title = table.Column<string>(type: "TEXT", nullable: false),
                     content = table.Column<string>(type: "TEXT", nullable: false),
-                    createdAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    createdAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    tagId = table.Column<int>(type: "INTEGER", nullable: false),
+                    likes = table.Column<int>(type: "INTEGER", nullable: false),
+                    dislikes = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -77,9 +81,9 @@ namespace forum.Migrations
                 {
                     id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    name = table.Column<string>(type: "TEXT", nullable: false),
-                    lastName = table.Column<string>(type: "TEXT", nullable: false),
-                    email = table.Column<string>(type: "TEXT", nullable: false),
+                    name = table.Column<string>(type: "TEXT", maxLength: 30, nullable: false),
+                    lastName = table.Column<string>(type: "TEXT", maxLength: 30, nullable: false),
+                    email = table.Column<string>(type: "TEXT", maxLength: 40, nullable: false),
                     passwordHash = table.Column<string>(type: "TEXT", nullable: false),
                     token = table.Column<string>(type: "TEXT", nullable: false),
                     role = table.Column<string>(type: "TEXT", nullable: false)

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace forum.Migrations
 {
     [DbContext(typeof(ForumDbContext))]
-    [Migration("20230601134958_InitialCreate")]
+    [Migration("20230614161211_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -54,11 +54,16 @@ namespace forum.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("receiverId")
-                        .HasColumnType("INTEGER");
+                    b.Property<DateTime>("createdAt")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("senderId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("receiverEmail")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("senderEmail")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("id");
 
@@ -77,6 +82,15 @@ namespace forum.Migrations
 
                     b.Property<DateTime>("createdAt")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("dislikes")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("likes")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("tagId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("title")
                         .IsRequired()
@@ -113,14 +127,17 @@ namespace forum.Migrations
 
                     b.Property<string>("email")
                         .IsRequired()
+                        .HasMaxLength(40)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("lastName")
                         .IsRequired()
+                        .HasMaxLength(30)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("name")
                         .IsRequired()
+                        .HasMaxLength(30)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("passwordHash")
