@@ -85,7 +85,7 @@ namespace forum.Migrations
                     lastName = table.Column<string>(type: "TEXT", maxLength: 30, nullable: false),
                     email = table.Column<string>(type: "TEXT", maxLength: 40, nullable: false),
                     passwordHash = table.Column<string>(type: "TEXT", nullable: false),
-                    token = table.Column<string>(type: "TEXT", nullable: false),
+                    token = table.Column<string>(type: "TEXT", nullable: true),
                     role = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>

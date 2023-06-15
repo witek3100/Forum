@@ -146,7 +146,6 @@ namespace forum.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("token")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("id");

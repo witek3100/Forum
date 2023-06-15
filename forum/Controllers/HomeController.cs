@@ -22,8 +22,9 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
+        string? token = HttpContext.Session.GetString("token");
         
-        if (HttpContext.Session.GetString("email") == null)
+        if (token == null)
         {
             return View();
         }
@@ -31,7 +32,17 @@ public class HomeController : Controller
         List<Post> posts = new List<Post>();
         posts = _context.Post.OrderByDescending(p => p.createdAt).ToList();
         ViewBag.posts = posts;
-        ViewBag.userEmail = HttpContext.Session.GetString("email");
+
+        var user = _context.User.FirstOrDefault(u => u.token == token);
+
+        if (user == null)
+        {
+            return Problem("User does not exist.");
+        }
+
+        ViewBag.userEmail = user.email;
+        ViewBag.role = user.role;
+
         return View("IndexLoggedIn");
     }
 

@@ -22,8 +22,20 @@ namespace forum.Controllers
         // GET: Message
         public async Task<IActionResult> Index()
         {
-            var sentMessages = _context.Message.Where(m => m.senderEmail == HttpContext.Session.GetString("email")).ToList().OrderByDescending(m => m.createdAt);
-            var recievedMessages = _context.Message.Where(m => m.receiverEmail == HttpContext.Session.GetString("email")).ToList().OrderByDescending(m => m.createdAt);
+            if (HttpContext.Session.GetInt32("token") == null)
+            {
+                return RedirectToAction("SignIn", "Auth");
+            }
+
+            var user = _context.User.FirstOrDefault(u => u.token == HttpContext.Session.GetString("token"));
+
+            if (user == null)
+            {
+                return Problem("User does not exist.");
+            }
+
+            var sentMessages = _context.Message.Where(m => m.senderEmail == user.email).ToList().OrderByDescending(m => m.createdAt);
+            var recievedMessages = _context.Message.Where(m => m.receiverEmail == user.email).ToList().OrderByDescending(m => m.createdAt);
             ViewBag.sentMessages = sentMessages;
             ViewBag.recievedMessages = recievedMessages;
             return _context.Message != null ? View() : Problem("Entity set 'ForumDbContext.Message'  is null.");
@@ -60,7 +72,21 @@ namespace forum.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,senderEmail,receiverEmail,content")] Message message)
         {
-            message.senderEmail = HttpContext.Session.GetString("email");
+            string? token = HttpContext.Session.GetString("token");
+            if (token == null)
+            {
+                return RedirectToAction("SignIn", "Auth");
+            }
+
+            var user = _context.User.FirstOrDefault(u => u.token == token);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            message.senderEmail = user.email;
+
             if (message.senderEmail != "" && message.receiverEmail != "")
             {
                 _context.Add(message);
@@ -153,14 +179,14 @@ namespace forum.Controllers
             {
                 _context.Message.Remove(message);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool MessageExists(int id)
         {
-          return (_context.Message?.Any(e => e.id == id)).GetValueOrDefault();
+            return (_context.Message?.Any(e => e.id == id)).GetValueOrDefault();
         }
     }
 }

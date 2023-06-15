@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace forum.Migrations
 {
     [DbContext(typeof(ForumDbContext))]
-    [Migration("20230614161211_InitialCreate")]
+    [Migration("20230615212736_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -149,7 +149,6 @@ namespace forum.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("token")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("id");

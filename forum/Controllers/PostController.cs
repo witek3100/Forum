@@ -22,9 +22,9 @@ namespace forum.Controllers
         // GET: Post
         public async Task<IActionResult> Index()
         {
-              return _context.Post != null ? 
-                          View(await _context.Post.ToListAsync()) :
-                          Problem("Entity set 'ForumDbContext.Post'  is null.");
+            return _context.Post != null ?
+                        View(await _context.Post.ToListAsync()) :
+                        Problem("Entity set 'ForumDbContext.Post'  is null.");
         }
 
         // GET: Post/Details/5
@@ -60,7 +60,18 @@ namespace forum.Controllers
         {
             if (ModelState.IsValid)
             {
-                post.userId = _context.User.Where(u => u.email == HttpContext.Session.GetString("email")).ToList()[0].id;
+                string? token = HttpContext.Session.GetString("token");
+                if (token == null)
+                {
+                    return RedirectToAction("SignIn", "Auth");
+                }
+                var user = _context.User.FirstOrDefault(u => u.token == token);
+                if (user == null)
+                {
+                    return Problem("User does not exist.");
+                }
+
+                post.userId = user.id;
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -151,14 +162,14 @@ namespace forum.Controllers
             {
                 _context.Post.Remove(post);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool PostExists(int id)
         {
-          return (_context.Post?.Any(e => e.id == id)).GetValueOrDefault();
+            return (_context.Post?.Any(e => e.id == id)).GetValueOrDefault();
         }
 
         public async Task<IActionResult> GiveLike(int id)
@@ -169,7 +180,7 @@ namespace forum.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Index", "Home", new { area = "" });
         }
-        
+
         public async Task<IActionResult> GiveDislike(int id)
         {
             var post = _context.Post.Where(p => p.id == id).ToList()[0];

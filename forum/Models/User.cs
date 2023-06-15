@@ -25,7 +25,7 @@ public class User
 
     public string passwordHash { get; set; }
 
-    public string token { get; set; }
+    public string? token { get; set; }
 
     public string role { get; set; } = "user";
 }
