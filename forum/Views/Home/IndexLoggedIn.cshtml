@@ -6,6 +6,9 @@
 <center>
     <h1>Welcome!</h1>
     <h2>You are logged as @ViewBag.userEmail </h2>
+    @if (ViewBag.role.Equals("admin")) {
+        <button style="border-radius: 25px; background-color: #aaea8f" onclick="window.location.href='/Admin'">Manage system</button>
+    }
     <hr/>
     <div style="display: inline-block; margin-top: 20px;">
         <button style="background-color: #dedc3a; border-radius: 10px;">

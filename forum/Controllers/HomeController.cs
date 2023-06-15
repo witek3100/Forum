@@ -32,6 +32,7 @@ public class HomeController : Controller
         posts = _context.Post.OrderByDescending(p => p.createdAt).ToList();
         ViewBag.posts = posts;
         ViewBag.userEmail = HttpContext.Session.GetString("email");
+        ViewBag.role = HttpContext.Session.GetString("role");
         return View("IndexLoggedIn");
     }
 

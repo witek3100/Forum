@@ -45,6 +45,7 @@ namespace forum.Controllers
             }
 
             HttpContext.Session.SetString("email", email);
+            HttpContext.Session.SetString("role", user.role);
 
             return RedirectToAction("Index", "Home");
         }
@@ -132,12 +133,6 @@ namespace forum.Controllers
 
         public IActionResult ChangePassword()
         {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult ChangePassword(IFormCollection form)
-        {
             var email = HttpContext.Session.GetString("email");
 
             if (email == null)
@@ -145,6 +140,13 @@ namespace forum.Controllers
                 return Problem("Invalid credentials.");
             }
 
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ChangePassword(IFormCollection form)
+        {
+            var email = HttpContext.Session.GetString("email");
             var user = _context.User.FirstOrDefault(u => u.email == email);
             var oldPassword = form["oldPassword"].ToString();
             var newPassword = form["newPassword"].ToString();
