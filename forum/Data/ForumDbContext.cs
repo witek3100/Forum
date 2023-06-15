@@ -11,7 +11,7 @@ public class ForumDbContext : DbContext
         {
             var passwordHash = BCrypt.Net.BCrypt.HashPassword("admin");
 
-            this.Add(new User { id = 1, name = "admin", lastName = "admin", email = "admin@admin.pl", passwordHash = passwordHash, token = Guid.NewGuid().ToString(), role = "admin" });
+            this.Add(new User { id = 1, name = "admin", lastName = "admin", email = "admin", passwordHash = passwordHash, token = Guid.NewGuid().ToString(), role = "admin" });
             this.SaveChanges();
         }
     }
