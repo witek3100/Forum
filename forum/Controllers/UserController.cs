@@ -19,21 +19,55 @@ namespace forum.Controllers
             _context = context;
         }
 
+        private User? GetUser()
+        {
+            string? token = HttpContext.Session.GetString("token");
+            if (token == null)
+            {
+                return null;
+            }
+            var user = _context.User.FirstOrDefault(u => u.token == token);
+            if (user == null)
+            {
+                return null;
+            }
+            return user;
+        }
+
         // GET: User
         public async Task<IActionResult> Index()
         {
-              return _context.User != null ? 
-                          View(await _context.User.ToListAsync()) :
-                          Problem("Entity set 'ForumDbContext.User'  is null.");
+            var user = GetUser();
+            if (user == null)
+            {
+                return RedirectToAction("SignIn", "Auth");
+            }
+
+            int? userId = user.id;
+            string? role = user.role;
+
+            if (userId == null || role == null || role != "admin")
+            {
+                return RedirectToAction("SignIn", "Auth");
+            }
+
+            return _context.User != null ?
+                        View(await _context.User.ToListAsync()) :
+                        Problem("Entity set 'ForumDbContext.User'  is null.");
         }
 
         public async Task<IActionResult> Profile()
         {
-            var user = _context.User.Where(u => u.email == HttpContext.Session.GetString("email")).ToList()[0];
+            var user = GetUser();
+            if (user == null)
+            {
+                return RedirectToAction("SignIn", "Auth");
+            }
+
             ViewBag.user = user;
             return View();
         }
-        
+
         // GET: User/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -42,11 +76,10 @@ namespace forum.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (user == null)
+            var user = GetUser();
+            if (user == null || user.id != id && user.role != "admin")
             {
-                return NotFound();
+                return RedirectToAction("SignIn", "Auth");
             }
 
             return View(user);
@@ -55,6 +88,11 @@ namespace forum.Controllers
         // GET: User/Create
         public IActionResult Create()
         {
+            if (GetUser() == null)
+            {
+                return RedirectToAction("SignIn", "Auth");
+            }
+
             return View();
         }
 
@@ -157,14 +195,14 @@ namespace forum.Controllers
             {
                 _context.User.Remove(user);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool UserExists(int id)
         {
-          return (_context.User?.Any(e => e.id == id)).GetValueOrDefault();
+            return (_context.User?.Any(e => e.id == id)).GetValueOrDefault();
         }
     }
 }

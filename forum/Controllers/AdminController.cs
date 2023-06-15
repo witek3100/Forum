@@ -15,7 +15,24 @@ namespace forum.Controllers
         }
 
         public IActionResult Index()
-        {
+        {   
+            string? token = HttpContext.Session.GetString("token");
+            if (token == null)
+            {
+                return RedirectToAction("SignIn", "Auth");
+            }
+
+            var user = _context.User.FirstOrDefault(u => u.token == HttpContext.Session.GetString("token"));
+            if (user == null)
+            {
+                return Problem("User does not exist.");
+            }
+
+            if (user.role != "admin")
+            {
+                return RedirectToAction("SignIn", "Auth");
+            }
+
             return View();
         }
 
