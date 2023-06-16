@@ -116,9 +116,9 @@ namespace forum.Controllers
                 {
                     name = postForm["tag"].ToString(),
                 };
+                _context.Add(tag);
+                await _context.SaveChangesAsync();
             }
-            _context.Add(tag);
-            await _context.SaveChangesAsync();
             var newTag = _context.Tag.FirstOrDefault(t => t.name == postForm["tag"].ToString());
             if (newTag == null)
             {
