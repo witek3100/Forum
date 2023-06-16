@@ -101,7 +101,7 @@ namespace forum.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,userId,title,content,createdAt")] Post post)
+        public async Task<IActionResult> Create(IFormCollection postForm)
         {
             var userSession = await GetUserAsync();
             if (userSession == null)
@@ -109,24 +109,31 @@ namespace forum.Controllers
                 return RedirectToAction("SignIn", "Auth");
             }
 
+            var tag = _context.Tag.FirstOrDefault(t => t.name == postForm["tag"].ToString());
+            if (tag == null)
+            {
+                tag = new Tag
+                {
+                    name = postForm["tag"].ToString(),
+                };
+            }
+
+            var post = new Post
+            {
+                userId = userSession.id,
+                title = postForm["title"].ToString(),
+                content = postForm["content"].ToString(),
+                tagId = tag.id,
+            };
+
             if (ModelState.IsValid)
             {
-                string? token = HttpContext.Session.GetString("token");
-                if (token == null)
-                {
-                    return RedirectToAction("SignIn", "Auth");
-                }
-                var user = _context.User.FirstOrDefault(u => u.token == token);
-                if (user == null)
-                {
-                    return Problem("User does not exist.");
-                }
 
-                post.userId = user.id;
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index", "Home");
             }
+            
             return View(post);
         }
 
