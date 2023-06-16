@@ -15,6 +15,12 @@ namespace forum.Controllers
             _context = context;
         }
 
+        public IActionResult Error(string message)
+        {
+            ViewBag.message = message;
+            return View();
+        }
+
         private async Task<User?> GetUserAsync()
         {
             string? token = HttpContext.Session.GetString("token");
@@ -36,7 +42,7 @@ namespace forum.Controllers
         }
 
         public async Task<IActionResult> Logout()
-        {   
+        {
 
             var user = await GetUserAsync();
             if (user != null)
@@ -59,14 +65,14 @@ namespace forum.Controllers
 
             if (user == null)
             {
-                return Problem("Invalid credentials.");
+                return View("Error", "User does not exist.");
             }
 
             var authResult = BCrypt.Net.BCrypt.Verify(password, user.passwordHash);
 
             if (!authResult)
             {
-                return Problem("Invalid credentials.");
+                return View("Error", "Invalid password.");
             }
 
             string token = Guid.NewGuid().ToString();
@@ -92,15 +98,15 @@ namespace forum.Controllers
             var password = form["password"].ToString();
             if (!new EmailAddressAttribute().IsValid(email))
             {
-                return Problem("Invalid email address.");
+                return View("Error", "Invalid email.");
             }
             if (password.Length < 6)
             {
-                return Problem("Password must be at least 8 characters long.");
+                return View("Error", "Password must be at least 6 characters long.");
             }
             else if (password != form["confirmPassword"].ToString())
             {
-                return Problem("Passwords do not match.");
+                return View("Error", "Passwords do not match.");
             }
 
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
@@ -108,7 +114,7 @@ namespace forum.Controllers
 
             if (user != null)
             {
-                return Problem("User already exists.");
+                return View("Error", "User already exists.");
             }
 
             var newUser = new User
@@ -189,27 +195,27 @@ namespace forum.Controllers
 
             if (user == null)
             {
-                return Problem("User does not exist.");
+                return View("Error", "User does not exist.");
             }
 
             var authResult = BCrypt.Net.BCrypt.Verify(oldPassword, user.passwordHash);
 
             if (!authResult)
             {
-                return Problem("Invalid credentials.");
+                return View("Error", "Invalid password.");
             }
 
-            if (newPassword.Length < 8)
+            if (newPassword.Length < 6)
             {
-                return Problem("Password must be at least 8 characters long.");
+                return View("Error", "Password must be at least 6 characters long.");
             }
             else if (newPassword != confirmPassword)
             {
-                return Problem("Passwords do not match.");
+                return View("Error", "Passwords do not match.");
             }
             else if (newPassword == oldPassword)
             {
-                return Problem("New password must be different from the old one.");
+                return View("Error", "New password must be different from old password.");
             }
 
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
