@@ -22,7 +22,23 @@ namespace forum.Controllers
         // GET: Comment
         public async Task<IActionResult> Index()
         {
-            return _context.Comment != null ? View() : Problem("Entity set 'ForumDbContext.Comment'  is null.");
+            var user = await GetUserAsync();
+            if (user == null)
+            {
+                return RedirectToAction("SignIn", "Auth");
+            }
+
+            int? userId = user.id;
+            string? role = user.role;
+
+            if (userId == null || role == null || role != "admin")
+            {
+                return RedirectToAction("SignIn", "Auth");
+            }
+
+            return _context.Comment != null ?
+                        View(await _context.Comment.ToListAsync()) :
+                        Problem("Entity set 'ForumDbContext.Comment' is null.");
         }
 
         // GET: Comment/Details/5
@@ -58,7 +74,7 @@ namespace forum.Controllers
         public async Task<IActionResult> Create([Bind("postId,content")] Comment comment)
         {
             var postId = comment.postId;
-           // comment.userId = _context.User.Where(u => u.email == HttpContext.Session.GetString("email")).ToList()[0].id;
+            // comment.userId = _context.User.Where(u => u.email == HttpContext.Session.GetString("email")).ToList()[0].id;
             if (ModelState.IsValid)
             {
                 _context.Add(comment);
@@ -151,14 +167,14 @@ namespace forum.Controllers
             {
                 _context.Comment.Remove(comment);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CommentExists(int id)
         {
-          return (_context.Comment?.Any(e => e.id == id)).GetValueOrDefault();
+            return (_context.Comment?.Any(e => e.id == id)).GetValueOrDefault();
         }
 
         public async Task<IActionResult> PostComments(int id)

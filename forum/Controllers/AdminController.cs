@@ -35,7 +35,5 @@ namespace forum.Controllers
 
             return View();
         }
-
-        
     }
 }

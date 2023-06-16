@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Forum.Data;
 using Forum.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace forum.Controllers
 {
@@ -14,14 +15,14 @@ namespace forum.Controllers
             _context = context;
         }
 
-        private User? GetUser()
+        private async Task<User?> GetUserAsync()
         {
             string? token = HttpContext.Session.GetString("token");
             if (token == null)
             {
                 return null;
             }
-            var user = _context.User.FirstOrDefault(u => u.token == token);
+            var user = await _context.User.FirstOrDefaultAsync(u => u.token == token);
             if (user == null)
             {
                 return null;
@@ -34,10 +35,10 @@ namespace forum.Controllers
             return View();
         }
 
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {   
 
-            var user = GetUser();
+            var user = await GetUserAsync();
             if (user != null)
             {
                 user.token = null;

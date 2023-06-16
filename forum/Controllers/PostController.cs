@@ -22,6 +22,17 @@ namespace forum.Controllers
         // GET: Post
         public async Task<IActionResult> Index()
         {
+            var posts = await _context.Post.ToListAsync();
+            var idToName = new Dictionary<int, string>();
+            foreach (var post in posts)
+            {
+                var user = await _context.User.FindAsync(post.userId);
+                if (user != null)
+                    idToName[post.userId] = user.name + " " + user.lastName;
+            }
+
+            ViewData["idToName"] = idToName;
+
             return _context.Post != null ?
                         View(await _context.Post.ToListAsync()) :
                         Problem("Entity set 'ForumDbContext.Post'  is null.");
@@ -74,7 +85,7 @@ namespace forum.Controllers
                 post.userId = user.id;
                 _context.Add(post);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
             }
             return View(post);
         }
