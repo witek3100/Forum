@@ -48,4 +48,5 @@ Forum
   
   
 ### Database schema
+Project uses simple sqlite3 database  
 ![](https://github.com/witek3100/C--Projekt/blob/main/assets/database_schema.png)
