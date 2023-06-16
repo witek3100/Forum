@@ -57,3 +57,7 @@ Project uses simple sqlite3 database
 ![](https://github.com/witek3100/C--Projekt/blob/main/assets/Screenshot3.png)
 ![](https://github.com/witek3100/C--Projekt/blob/main/assets/Screenshot1.png)
 ![](https://github.com/witek3100/C--Projekt/blob/main/assets/Screenshot2.png)
+
+### Authors
+* Ryszard Nowak
+* Witold Nowogórski
