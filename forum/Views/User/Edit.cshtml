@@ -1,7 +1,7 @@
 @model Forum.Models.User
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit User";
 }
 <h1>Edit profile</h1>
 
@@ -26,21 +26,25 @@
                 <input style="background-color: #d6fb87" asp-for="email" class="form-control" />
                 <span asp-validation-for="email" class="text-danger"></span>
             </div>
-             <div class="form-group">
-                 <label asp-for="passwordHash" class="control-label"></label>
-                 <input asp-for="passwordHash" class="form-control" readonly="readonly"/>
-                 <span asp-validation-for="passwordHash" class="text-danger"></span>
+            @if (ViewBag.role.Equals("admin")) {
+                <div class="form-group">
+                    <label asp-for="role" class="control-label"></label>
+                    <input style="background-color: #d6fb87" asp-for="role" class="form-control"/>
+                    <span asp-validation-for="role" class="text-danger"></span>
+                </div>
+            } else {
+                <div class="form-group">
+                    <label asp-for="role" class="control-label"></label>
+                    <input asp-for="role" class="form-control" readonly="readonly"/>
+                    <span asp-validation-for="role" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group">
+                <input type="hidden" asp-for="token" class="form-control" readonly="readonly"/>
+            </div>
+            <div class="form-group">
+                 <input type="hidden" asp-for="passwordHash" class="form-control" readonly="readonly"/>
              </div>
-            <div class="form-group">
-                <label asp-for="token" class="control-label"></label>
-                <input asp-for="token" class="form-control" readonly="readonly"/>
-                <span asp-validation-for="token" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="role" class="control-label"></label>
-                <input asp-for="role" class="form-control" readonly="readonly"/>
-                <span asp-validation-for="role" class="text-danger"></span>
-            </div>
             <center>
                 <div class="form-group">
                     <input type="submit" value="Save" style="margin-top: 10px; background-color: #217d18; border-radius: 10px;" />

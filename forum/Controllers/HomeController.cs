@@ -48,6 +48,12 @@ public class HomeController : Controller
 
     public IActionResult Search(string query)
     {
+        var user = _context.User.FirstOrDefault(u => u.token == HttpContext.Session.GetString("token"));
+        if (user == null)
+        {
+            return RedirectToAction("SignIn", "Auth");
+        }
+
         var posts = _context.Post.Where(p => p.title.Contains(query)).ToList();
         ViewBag.posts = posts;
         ViewBag.postsCount = posts.Count;

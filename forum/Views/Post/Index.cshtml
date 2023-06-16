@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    var idToName = (Dictionary<int, string>)ViewData["idToName"];
 }
 <center>
     <h1>Posts</h1>
@@ -17,7 +18,7 @@
         <div style="border-radius: 15px; background-color: #92de11; margin-top: 25px;">
             <div style="margin: 20px;">
                 <div style="display: inline-block; margin-left: 20px;">
-                    <b>User: </b>@Html.DisplayFor(modelItem => item.userId)
+                    <b>User: </b>@Html.DisplayFor(modelItem => @idToName[item.userId])
                 </div>
                 <div style="display: inline-block; margin-left: 20px;">
                     <b>Date: </b>@Html.DisplayFor(modelItem => item.createdAt)
@@ -31,9 +32,18 @@
                 @Html.DisplayFor(modelItem => item.content)
                 <div style="float: right">
                     <span>@Html.DisplayFor(modelItem => item.likes)</span>
-                    <button style="border-radius: 10px; background-color: #5a9c1f">Like</button> &nbsp
-                    <button style="border-radius: 10px; background-color: #9c2319">Dislike</button>
+                    <text style="border-radius: 10px; background-color: #5a9c1f">Likes</text> &nbsp
+                    <text style="border-radius: 10px; background-color: #9c2319">Dislikes</text>
                     <span>@Html.DisplayFor(modelItem => item.dislikes)</span>
+                </div>
+                <div style="float: right">
+                    <button style="background-color: #217d18; color: white; border-radius: 10px;">
+                        <a style="text-decoration: none; color: black" asp-action="Details" asp-route-id="@item.id">Details</a>
+                    </button>
+                    &nbsp
+                    <button style="background-color: #217d18; color: white; border-radius: 10px;">
+                        <a style="text-decoration: none; color: black" asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                    </button>
                 </div>
             </div>
     </div>
