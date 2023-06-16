@@ -38,6 +38,10 @@
                 </div>
                 <div style="float: right">
                     <button style="background-color: #217d18; color: white; border-radius: 10px;">
+                        <a style="text-decoration: none; color: black" asp-action="Details" asp-route-id="@item.id">Details</a>
+                    </button>
+                    &nbsp
+                    <button style="background-color: #217d18; color: white; border-radius: 10px;">
                         <a style="text-decoration: none; color: black" asp-action="Delete" asp-route-id="@item.id">Delete</a>
                     </button>
                 </div>

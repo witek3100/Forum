@@ -19,6 +19,22 @@ namespace forum.Controllers
             _context = context;
         }
 
+        private async Task<User?> GetUserAsync()
+        {
+            string? token = HttpContext.Session.GetString("token");
+            if (token == null)
+            {
+                return null;
+            }
+            var user = await _context.User.FirstOrDefaultAsync(u => u.token == token);
+            if (user == null)
+            {
+                return null;
+            }
+            return user;
+        }
+
+
         // GET: Comment
         public async Task<IActionResult> Index()
         {
@@ -28,10 +44,9 @@ namespace forum.Controllers
                 return RedirectToAction("SignIn", "Auth");
             }
 
-            int? userId = user.id;
             string? role = user.role;
 
-            if (userId == null || role == null || role != "admin")
+            if (role != "admin")
             {
                 return RedirectToAction("SignIn", "Auth");
             }
@@ -41,27 +56,14 @@ namespace forum.Controllers
                         Problem("Entity set 'ForumDbContext.Comment' is null.");
         }
 
-        // GET: Comment/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Comment == null)
-            {
-                return NotFound();
-            }
-
-            var comment = await _context.Comment
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (comment == null)
-            {
-                return NotFound();
-            }
-
-            return View(comment);
-        }
-
         // GET: Comment/Create
-        public IActionResult Create(int id)
+        public async Task<IActionResult> Create(int id)
         {
+            var user = await GetUserAsync();
+            if (user == null)
+            {
+                return RedirectToAction("SignIn", "Auth");
+            }
             ViewBag.postId = id;
             return View();
         }
@@ -73,64 +75,18 @@ namespace forum.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("postId,content")] Comment comment)
         {
+            var user = await GetUserAsync();
+            if (user == null)
+            {
+                return RedirectToAction("SignIn", "Auth");
+            }
             var postId = comment.postId;
-            // comment.userId = _context.User.Where(u => u.email == HttpContext.Session.GetString("email")).ToList()[0].id;
+            comment.userId = user.id;
             if (ModelState.IsValid)
             {
                 _context.Add(comment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("PostComments", "Comment", new { id = postId });
-            }
-            return View(comment);
-        }
-
-        // GET: Comment/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Comment == null)
-            {
-                return NotFound();
-            }
-
-            var comment = await _context.Comment.FindAsync(id);
-            if (comment == null)
-            {
-                return NotFound();
-            }
-            return View(comment);
-        }
-
-        // POST: Comment/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,userId,postId,content,createdAt")] Comment comment)
-        {
-            if (id != comment.id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(comment);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CommentExists(comment.id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
             }
             return View(comment);
         }
@@ -143,11 +99,18 @@ namespace forum.Controllers
                 return NotFound();
             }
 
+            var user = await GetUserAsync();
+
             var comment = await _context.Comment
                 .FirstOrDefaultAsync(m => m.id == id);
             if (comment == null)
             {
                 return NotFound();
+            }
+
+            if (user == null || user.role != "admin" && user.id != comment.userId)
+            {
+                return RedirectToAction("SignIn", "Auth");
             }
 
             return View(comment);
@@ -163,8 +126,15 @@ namespace forum.Controllers
                 return Problem("Entity set 'ForumDbContext.Comment'  is null.");
             }
             var comment = await _context.Comment.FindAsync(id);
+
+            var user = await GetUserAsync();
+
             if (comment != null)
             {
+                if (user == null || user.role != "admin" && user.id != comment.userId)
+                {
+                    return RedirectToAction("SignIn", "Auth");
+                }
                 _context.Comment.Remove(comment);
             }
 
@@ -179,6 +149,12 @@ namespace forum.Controllers
 
         public async Task<IActionResult> PostComments(int id)
         {
+            var user = await GetUserAsync();
+            if (user == null)
+            {
+                return RedirectToAction("SignIn", "Auth");
+            }
+
             var comments = _context.Comment.Where(c => c.postId == id).ToList().OrderByDescending(p => p.createdAt);
             var post = _context.Post.Where(p => p.id == id).ToList()[0];
             ViewBag.comments = comments;

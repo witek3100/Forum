@@ -27,7 +27,7 @@ namespace forum.Controllers
                 return RedirectToAction("SignIn", "Auth");
             }
 
-            var user = _context.User.FirstOrDefault(u => u.token == HttpContext.Session.GetString("token"));
+            var user = await _context.User.FirstOrDefaultAsync(u => u.token == HttpContext.Session.GetString("token"));
 
             if (user == null)
             {
@@ -39,24 +39,6 @@ namespace forum.Controllers
             ViewBag.sentMessages = sentMessages;
             ViewBag.recievedMessages = recievedMessages;
             return _context.Message != null ? View() : Problem("Entity set 'ForumDbContext.Message'  is null.");
-        }
-
-        // GET: Message/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Message == null)
-            {
-                return NotFound();
-            }
-
-            var message = await _context.Message
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (message == null)
-            {
-                return NotFound();
-            }
-
-            return View(message);
         }
 
         // GET: Message/Create
@@ -94,94 +76,6 @@ namespace forum.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(message);
-        }
-
-        // GET: Message/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Message == null)
-            {
-                return NotFound();
-            }
-
-            var message = await _context.Message.FindAsync(id);
-            if (message == null)
-            {
-                return NotFound();
-            }
-            return View(message);
-        }
-
-        // POST: Message/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,senderId,receiverId,content")] Message message)
-        {
-            if (id != message.id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(message);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MessageExists(message.id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(message);
-        }
-
-        // GET: Message/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Message == null)
-            {
-                return NotFound();
-            }
-
-            var message = await _context.Message
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (message == null)
-            {
-                return NotFound();
-            }
-
-            return View(message);
-        }
-
-        // POST: Message/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Message == null)
-            {
-                return Problem("Entity set 'ForumDbContext.Message'  is null.");
-            }
-            var message = await _context.Message.FindAsync(id);
-            if (message != null)
-            {
-                _context.Message.Remove(message);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool MessageExists(int id)

@@ -22,32 +22,26 @@ namespace forum.Controllers
         // GET: Tag
         public async Task<IActionResult> Index()
         {
-              return _context.Tag != null ? 
-                          View(await _context.Tag.ToListAsync()) :
-                          Problem("Entity set 'ForumDbContext.Tag'  is null.");
-        }
-
-        // GET: Tag/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Tag == null)
+            var userSession = await _context.User.FirstOrDefaultAsync((u) => u.token == HttpContext.Session.GetString("token"));
+            if (userSession == null)
             {
-                return NotFound();
+                return RedirectToAction("SignIn", "Auth");
             }
 
-            var tag = await _context.Tag
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (tag == null)
-            {
-                return NotFound();
-            }
-
-            return View(tag);
+            return _context.Tag != null ?
+                        View(await _context.Tag.ToListAsync()) :
+                        Problem("Entity set 'ForumDbContext.Tag'  is null.");
         }
 
         // GET: Tag/Create
         public IActionResult Create()
         {
+            var userSession = _context.User.FirstOrDefault((u) => u.token == HttpContext.Session.GetString("token"));
+            if (userSession == null)
+            {
+                return RedirectToAction("SignIn", "Auth");
+            }
+
             return View();
         }
 
@@ -58,6 +52,12 @@ namespace forum.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,name")] Tag tag)
         {
+            var userSession = await _context.User.FirstOrDefaultAsync((u) => u.token == HttpContext.Session.GetString("token"));
+            if (userSession == null)
+            {
+                return RedirectToAction("SignIn", "Auth");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(tag);
@@ -67,97 +67,9 @@ namespace forum.Controllers
             return View(tag);
         }
 
-        // GET: Tag/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Tag == null)
-            {
-                return NotFound();
-            }
-
-            var tag = await _context.Tag.FindAsync(id);
-            if (tag == null)
-            {
-                return NotFound();
-            }
-            return View(tag);
-        }
-
-        // POST: Tag/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,name")] Tag tag)
-        {
-            if (id != tag.id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(tag);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TagExists(tag.id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(tag);
-        }
-
-        // GET: Tag/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Tag == null)
-            {
-                return NotFound();
-            }
-
-            var tag = await _context.Tag
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (tag == null)
-            {
-                return NotFound();
-            }
-
-            return View(tag);
-        }
-
-        // POST: Tag/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Tag == null)
-            {
-                return Problem("Entity set 'ForumDbContext.Tag'  is null.");
-            }
-            var tag = await _context.Tag.FindAsync(id);
-            if (tag != null)
-            {
-                _context.Tag.Remove(tag);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
         private bool TagExists(int id)
         {
-          return (_context.Tag?.Any(e => e.id == id)).GetValueOrDefault();
+            return (_context.Tag?.Any(e => e.id == id)).GetValueOrDefault();
         }
     }
 }
