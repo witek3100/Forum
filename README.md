@@ -9,7 +9,41 @@ Key features:
 * <dt> Reactions system </dt>: Users can upvote or downvote threads and messages to indicate their agreement or disagreement with the content.   
 
 ### Project Structure
-Forum
-
+Forum   
+  ├── Controllers                 # APP CONTROLLERS  
+  |        ├── AdminController.cs
+  |        ├── AuthController.cs  
+  |        ├── CommentController.cs
+  |        ├── HomeController.cs
+  |        ├── MessageController.cs
+  |        ├── PostController.cs
+  |        ├── TagController.cs
+  |        └── UserController.cs
+  ├────── Data                    # HANDLING CONNECTION WITH DATABASE
+  |        └── ForumDbContext.cs
+  ├────── Models                  # APP MODELS
+  |        ├── Comment.cs
+  |        ├── Message.cs
+  |        ├── Post.cs
+  |        ├── Tag.cs
+  |        └── User.cs  
+  ├────── Properties              # SOME SETTINGS
+  |        └── lauchSettings.json
+  ├────── Views                   # APP VIEWS  
+  |        ├── Admin  
+  |        ├── Auth  
+  |        ├── Comment  
+  |        ├── Home   
+  |        ├── Message  
+  |        ├── Post  
+  |        ├── Shared  
+  |        ├── Tag  
+  |        └── User
+  ├────── Program.cs            # APP ENTRY
+  ├────── appsettings.Development.json
+  ├────── appsettings.json
+  └────── forum.csproj
+  
+  
 ### Database schema
 ![](https://github.com/witek3100/C--Projekt/blob/main/assets/database_schema.png)
