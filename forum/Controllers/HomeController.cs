@@ -23,25 +23,42 @@ public class HomeController : Controller
     public IActionResult Index()
     {
         string? token = HttpContext.Session.GetString("token");
-        
+
         if (token == null)
         {
             return View();
+        }
+
+        var userSession = _context.User.FirstOrDefault(u => u.token == token);
+        if (userSession == null)
+        {
+            return Problem("User does not exist.");
         }
 
         List<Post> posts = new List<Post>();
         posts = _context.Post.OrderByDescending(p => p.createdAt).ToList();
         ViewBag.posts = posts;
 
-        var user = _context.User.FirstOrDefault(u => u.token == token);
-
-        if (user == null)
+        var userIdToName = new Dictionary<int, string>();
+        foreach (var post in posts)
         {
-            return Problem("User does not exist.");
+            var user = _context.User.Find(post.userId);
+            if (user != null)
+                userIdToName[post.userId] = user.name + " " + user.lastName;
         }
+        ViewData["userIdToName"] = userIdToName;
 
-        ViewBag.userEmail = user.email;
-        ViewBag.role = user.role;
+        var tagIdToName = new Dictionary<int, string>();
+        foreach (var post in posts)
+        {
+            var tag = _context.Tag.Find(post.tagId);
+            if (tag != null)
+                tagIdToName[post.tagId] = tag.name;
+        }
+        ViewData["tagIdToName"] = tagIdToName;
+
+        ViewBag.userEmail = userSession.email;
+        ViewBag.role = userSession.role;
 
         return View("IndexLoggedIn");
     }

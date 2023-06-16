@@ -117,18 +117,24 @@ namespace forum.Controllers
                     name = postForm["tag"].ToString(),
                 };
             }
+            _context.Add(tag);
+            await _context.SaveChangesAsync();
+            var newTag = _context.Tag.FirstOrDefault(t => t.name == postForm["tag"].ToString());
+            if (newTag == null)
+            {
+                return Problem("Tag not found.");
+            }
 
             var post = new Post
             {
                 userId = userSession.id,
                 title = postForm["title"].ToString(),
                 content = postForm["content"].ToString(),
-                tagId = tag.id,
+                tagId = newTag.id,
             };
 
             if (ModelState.IsValid)
             {
-
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index", "Home");
