@@ -12,7 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<ForumDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("ForumDbContext") ?? throw new InvalidOperationException("Connection string 'ForumDbContext' not found.")));
+    {
+        options.UseSqlite(builder.Configuration.GetConnectionString("ForumDbContext") ?? throw new InvalidOperationException("Connection string 'ForumDbContext' not found."));
+        options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+    });
 
 builder.Services.AddSession(options =>
 {

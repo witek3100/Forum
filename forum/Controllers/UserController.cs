@@ -19,14 +19,14 @@ namespace forum.Controllers
             _context = context;
         }
 
-        private User? GetUser()
+        private async Task<User?> GetUserAsync()
         {
             string? token = HttpContext.Session.GetString("token");
             if (token == null)
             {
                 return null;
             }
-            var user = _context.User.FirstOrDefault(u => u.token == token);
+            var user = await _context.User.FirstOrDefaultAsync(u => u.token == token);
             if (user == null)
             {
                 return null;
@@ -37,7 +37,7 @@ namespace forum.Controllers
         // GET: User
         public async Task<IActionResult> Index()
         {
-            var user = GetUser();
+            var user = await GetUserAsync();
             if (user == null)
             {
                 return RedirectToAction("SignIn", "Auth");
@@ -58,7 +58,7 @@ namespace forum.Controllers
 
         public async Task<IActionResult> Profile()
         {
-            var user = GetUser();
+            var user = await GetUserAsync();
             if (user == null)
             {
                 return RedirectToAction("SignIn", "Auth");
@@ -76,19 +76,23 @@ namespace forum.Controllers
                 return NotFound();
             }
 
-            var user = GetUser();
-            if (user == null || user.id != id && user.role != "admin")
+            var userSession = await GetUserAsync();
+            if (userSession == null || userSession.id != id && userSession.role != "admin")
             {
                 return RedirectToAction("SignIn", "Auth");
             }
+
+            var user = await _context.User
+                .FindAsync(id);
 
             return View(user);
         }
 
         // GET: User/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            if (GetUser() == null)
+            var userSession = await GetUserAsync();
+            if (userSession == null || userSession.role != "admin")
             {
                 return RedirectToAction("SignIn", "Auth");
             }
@@ -101,15 +105,32 @@ namespace forum.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,name,lastName,email,passwordHash,token,role")] User user)
+        public async Task<IActionResult> Create(IFormCollection userForm)
         {
-            if (ModelState.IsValid)
+            var userSession = await GetUserAsync();
+            if (userSession == null || userSession.role != "admin")
             {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("SignIn", "Auth");
             }
-            return View(user);
+
+            if (userForm["password"].ToString().Length < 8)
+            {
+                return Problem("Password must be at least 8 characters long.");
+            }
+
+            var user = new User
+            {
+                name = userForm["name"].ToString(),
+                lastName = userForm["lastName"].ToString(),
+                email = userForm["email"].ToString(),
+                passwordHash = BCrypt.Net.BCrypt.HashPassword(userForm["password"].ToString()),
+                role = userForm["role"].ToString(),
+                token = null
+            };
+
+            _context.Add(user);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: User/Edit/5
@@ -120,11 +141,23 @@ namespace forum.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User.FindAsync(id);
-            if (user == null)
+            var userSession = await GetUserAsync();
+            if (userSession == null || userSession.id != id && userSession.role != "admin")
             {
-                return NotFound();
+                return RedirectToAction("SignIn", "Auth");
             }
+
+            if (userSession.role == "admin")
+            {
+                ViewBag.role = "admin";
+            }
+            else
+            {
+                ViewBag.role = "user";
+            }
+
+            var user = await _context.User.FindAsync(id);
+
             return View(user);
         }
 
@@ -135,9 +168,10 @@ namespace forum.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("id,name,lastName,email,passwordHash,token,role")] User user)
         {
-            if (id != user.id)
+            var userSession = await GetUserAsync();
+            if (id != user.id || userSession == null || userSession.id != id && userSession.role != "admin")
             {
-                return NotFound();
+                return RedirectToAction("SignIn", "Auth");
             }
 
             if (ModelState.IsValid)
@@ -158,7 +192,10 @@ namespace forum.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Profile));
+                if (userSession.role != "admin")
+                    return RedirectToAction(nameof(Profile));
+                else
+                    return RedirectToAction(nameof(Index));
             }
             return View(user);
         }
@@ -166,9 +203,10 @@ namespace forum.Controllers
         // GET: User/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.User == null)
+            var userSession = await GetUserAsync();
+            if (id == null || _context.User == null || userSession == null || userSession.id != id && userSession.role != "admin")
             {
-                return NotFound();
+                return RedirectToAction("SignIn", "Auth");
             }
 
             var user = await _context.User
@@ -190,6 +228,12 @@ namespace forum.Controllers
             {
                 return Problem("Entity set 'ForumDbContext.User'  is null.");
             }
+            var userSession = await GetUserAsync();
+            if (userSession == null || userSession.id != id && userSession.role != "admin")
+            {
+                return RedirectToAction("SignIn", "Auth");
+            }
+
             var user = await _context.User.FindAsync(id);
             if (user != null)
             {

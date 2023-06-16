@@ -1,10 +1,10 @@
 @model IEnumerable<Forum.Models.User>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Users";
 }
 
-<h1>Index</h1>
+<h1>Users</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -20,12 +20,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.passwordHash)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.token)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.role)
@@ -44,12 +38,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.passwordHash)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.token)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.role)
