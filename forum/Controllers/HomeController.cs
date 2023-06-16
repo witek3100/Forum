@@ -71,10 +71,32 @@ public class HomeController : Controller
             return RedirectToAction("SignIn", "Auth");
         }
 
-        var posts = _context.Post.Where(p => p.title.Contains(query)).ToList();
+        var tag = _context.Tag.FirstOrDefault(t => t.name == query);
+        int tagId = tag != null ? tag.id : -1;
+
+        var posts = _context.Post.Where(p => p.title.Contains(query) || p.tagId == tagId).ToList();
         ViewBag.posts = posts;
         ViewBag.postsCount = posts.Count;
         ViewBag.query = query;
+
+        var userIdToName = new Dictionary<int, string>();
+        foreach (var post in posts)
+        {
+            var userPost = _context.User.Find(post.userId);
+            if (userPost != null)
+                userIdToName[post.userId] = userPost.name + " " + userPost.lastName;
+        }
+        ViewData["userIdToName"] = userIdToName;
+
+        var tagIdToName = new Dictionary<int, string>();
+        foreach (var post in posts)
+        {
+            var tagPost = _context.Tag.Find(post.tagId);
+            if (tagPost != null)
+                tagIdToName[post.tagId] = tagPost.name;
+        }
+        ViewData["tagIdToName"] = tagIdToName;
+
         return View();
     }
 
