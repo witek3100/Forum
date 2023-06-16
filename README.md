@@ -52,8 +52,8 @@ Project uses simple sqlite3 database
 ![](https://github.com/witek3100/C--Projekt/blob/main/assets/database_schema.png)
 
 ### Screenshots
-![](https://github.com/witek3100/C--Projekt/blob/main/assets/Screenshot1)
-![](https://github.com/witek3100/C--Projekt/blob/main/assets/Screenshot2)
-![](https://github.com/witek3100/C--Projekt/blob/main/assets/Screenshot3)
-![](https://github.com/witek3100/C--Projekt/blob/main/assets/Screenshot4)
-![](https://github.com/witek3100/C--Projekt/blob/main/assets/Screenshot5)
+![](https://github.com/witek3100/C--Projekt/blob/main/assets/Screenshot1.png)
+![](https://github.com/witek3100/C--Projekt/blob/main/assets/Screenshot2.png)
+![](https://github.com/witek3100/C--Projekt/blob/main/assets/Screenshot3.png)
+![](https://github.com/witek3100/C--Projekt/blob/main/assets/Screenshot4.png)
+![](https://github.com/witek3100/C--Projekt/blob/main/assets/Screenshot5.png)
