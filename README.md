@@ -11,38 +11,38 @@ Key features:
 ### Project Structure
 Forum   
   ├── Controllers                 # APP CONTROLLERS  
-  |        ├── AdminController.cs
-  |        ├── AuthController.cs  
-  |        ├── CommentController.cs
-  |        ├── HomeController.cs
-  |        ├── MessageController.cs
-  |        ├── PostController.cs
-  |        ├── TagController.cs
-  |        └── UserController.cs
-  ├────── Data                    # HANDLING CONNECTION WITH DATABASE
-  |        └── ForumDbContext.cs
-  ├────── Models                  # APP MODELS
-  |        ├── Comment.cs
-  |        ├── Message.cs
-  |        ├── Post.cs
-  |        ├── Tag.cs
-  |        └── User.cs  
-  ├────── Properties              # SOME SETTINGS
-  |        └── lauchSettings.json
-  ├────── Views                   # APP VIEWS  
-  |        ├── Admin  
-  |        ├── Auth  
-  |        ├── Comment  
-  |        ├── Home   
-  |        ├── Message  
-  |        ├── Post  
-  |        ├── Shared  
+  |        ├── AdminController.cs  
+  |        ├── AuthController.cs    
+  |        ├── CommentController.cs  
+  |        ├── HomeController.cs  
+  |        ├── MessageController.cs  
+  |        ├── PostController.cs  
+  |        ├── TagController.cs  
+  |        └── UserController.cs  
+  ├────── Data                    # HANDLING CONNECTION WITH DATABASE  
+  |        └── ForumDbContext.cs  
+  ├────── Models                  # APP MODELS  
+  |        ├── Comment.cs  
+  |        ├── Message.cs  
+  |        ├── Post.cs  
+  |        ├── Tag.cs  
+  |        └── User.cs    
+  ├────── Properties              # SOME SETTINGS  
+  |        └── lauchSettings.json  
+  ├────── Views                   # APP VIEWS    
+  |        ├── Admin    
+  |        ├── Auth    
+  |        ├── Comment    
+  |        ├── Home     
+  |        ├── Message   
+  |        ├── Post   
+  |        ├── Shared   
   |        ├── Tag  
-  |        └── User
-  ├────── Program.cs            # APP ENTRY
-  ├────── appsettings.Development.json
-  ├────── appsettings.json
-  └────── forum.csproj
+  |        └── User  
+  ├────── Program.cs            # APP ENTRY  
+  ├────── appsettings.Development.json  
+  ├────── appsettings.json  
+  └────── forum.csproj  
   
   
 ### Database schema
